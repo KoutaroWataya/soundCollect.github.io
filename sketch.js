@@ -137,7 +137,7 @@ function endSpeech() {
       // console.log(myRec.resultString);
 
       var XHR = new XMLHttpRequest();
-      var url =originUrl + "time="+ str + "&sheet=" + sheet.value + "&UniqueID=" + UniqueID.value + "&text=" + myRec.resultString;
+      var url =originUrl + "time="+ str + "&session=" + session.value + "&UniqueID=" + UniqueID.value + "&text=" + myRec.resultString;
       XHR.open("GET", url, true);
       XHR.send(null);
 
