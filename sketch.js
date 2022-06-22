@@ -32,7 +32,7 @@ let count = 0;
 
 let speed;
 
-const originUrl = 'https://script.google.com/macros/s/AKfycbwRdtbENlQf0mptKkEd2yKv-oO5O23kCHaKtP7GmOJA0VqJNLwVjoQF2NdmWCW54O5pJA/exec?';
+const originUrl = 'https://script.google.com/macros/s/AKfycbyQyCDS-q2rk9Hsw3ZNOSMe2iTO6R21JkBNdxgmliCK0Ra-itLnZjq5pq74IqFT3Rm25A/exec?';
 
 
 //idのラジオボタン
