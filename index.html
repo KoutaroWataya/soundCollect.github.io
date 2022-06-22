@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="en"><head>
+    <script src="p5.js"></script>
+    <script src="p5.sound.min.js"></script>
+
+    
+    	<script type="text/javascript" src="midi"></script>
+	<script type="text/javascript" src="tone@13.4.9"></script>
+	<script type="text/javascript" src="ui@0.0.8"></script>
+    
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8">
+
+  </head>
+  <body>
+    
+  <h2>発話をgssに送るやつ</h2>
+     <hr> 
+    セッション
+  <form id="form1">
+  <input type="radio" name="session" value="1" checked="">1
+<input type="radio" name="session" value="2">2
+  <input type="radio" name="session" value="3">3
+    <input type="radio" name="session" value="4">4
+   <input type="radio" name="session" value="5">5
+  </form>
+    ID
+  <form id="form2">
+  <input type="radio" name="ID" value="1" checked="">1
+<input type="radio" name="ID" value="2">2
+  <input type="radio" name="ID" value="3">3
+    <input type="radio" name="ID" value="4">4
+   <input type="radio" name="ID" value="5">5
+  </form>
+    
+    <hr>
+    <button id="button_start_or_stop">start</button>
+    <input type="text" size="50" id="text">status: <span id="label">quiet</span><button id="button_textClear" onclick="clearText()">clear</button><br>
+  <hr>
+    <br> Log 
+    <br>
+    <textarea id="textarea" cols="50" rows="5"></textarea><button id="button_textareaClear" onclick="clearTextarea()">clear</button><br>
+ 
+
+  <br>
+<button id="button_test" onclick="sendTest()">test</button>
+  
+ 
+	
+  
+    <script src="p5.speech.js"></script>
+    <script src="sketch.js"></script>
+  
+
+</body></html>
