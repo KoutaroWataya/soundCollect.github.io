@@ -3,20 +3,15 @@ var is_recognition_activated = false;
 var is_sampleCheck_activated = false;
 var word;
 
-
-
 var dObj = new Date();
 var hours;
 var minutes;
 var seconds;
 var str;
 
-
 var wordCount = 0; //文字数カウントのための変数（最初は基準の数に設定）
 
 var preCount = [0, 0];
-
-
 
 var bCount = false;
 var Time; // 計測時間
@@ -28,18 +23,16 @@ let elapsedTime = 0;
 // 秒数をカウント
 let count = 0;
 
-
-
 let speed;
 
-const originUrl = 'https://script.google.com/macros/s/AKfycbx6csya6TJODhkBLcOu1EGTE_4wyOjDFXIFa48KHGCFyhQd3Jpm6EHbRS6-2__Q0EYtXw/exec?';
+let hiraganaConveted;
 
+const originUrl =
+  "https://script.google.com/macros/s/AKfycbzo713U3Gmd1dL5o5VFOpe9SdMa0pXazOffgh-TMbP6bf-QsWP6C4gCB7dvAXcjF2FJYA/exec?";
 
 //idのラジオボタン
 let session;
 let UniqueID;
-
-
 
 function setup() {
   // キャンバスは使わない
@@ -68,9 +61,9 @@ function setup() {
 
   //ラジオボタンの値をとってくるための部分
   const form1 = document.getElementById("form1");
-session = form1.session;
-    const form2 = document.getElementById("form2");
-UniqueID = form2.ID;
+  session = form1.session;
+  const form2 = document.getElementById("form2");
+  UniqueID = form2.ID;
 }
 
 var check = 0; //スピード切り替えチェック用の変数
@@ -136,10 +129,40 @@ function endSpeech() {
       document.getElementById("text").value = "";
       // console.log(myRec.resultString);
 
+      const kanjiText = myRec.resultString;
+
       var XHR = new XMLHttpRequest();
-      var url =originUrl + "time="+ str + "&session=" + session.value + "&UniqueID=" + UniqueID.value + "&text=" + myRec.resultString;
-      XHR.open("GET", url, true);
-      XHR.send(null);
+
+      perform("hiragana", kanjiText)
+        .then((_response) => {
+          const response = _response;
+
+          return response.json();
+        })
+        .then((resJson) => {
+          let rowText = resJson.converted;
+
+          //ひらがな化APIからうまく返ってこなかったら漢字のままの文章をrowTextに入れる
+          if (rowText == undefined) {
+            rowText = kanjiText;
+          }
+
+          const text = rowText.split(" ").join("");
+          var url =
+            originUrl +
+            "time=" +
+            str +
+            "&session=" +
+            session.value +
+            "&UniqueID=" +
+            UniqueID.value +
+            "&text=" +
+            text +
+            "&textCount=" +
+            text.length;
+          XHR.open("GET", url, true);
+          XHR.send(null);
+        });
 
       myRec.resultString = "";
     }
@@ -185,10 +208,6 @@ function toggleSampleCheck() {
   is_sampleCheck_activated = !is_sampleCheck_activated;
 }
 
-
-
-
-
 //上の枠を空にする
 function clearText() {
   document.getElementById("text").innerHTML = "";
@@ -198,18 +217,64 @@ function clearTextarea() {
   document.getElementById("textarea").innerHTML = "";
 }
 
-
-
-function sendTest(){
-  
+function sendTest() {
   dObj = new Date();
   str = getTimeStr(dObj);
-  
+
   var XHR = new XMLHttpRequest();
-  let text = "充電　されない";
-      var url =originUrl + "time="+ str + "&session=" + session.value + "&UniqueID=" + UniqueID.value + "&text=" + text;
+  let kanjiText = "充電　されない";
+
+  perform("hiragana", kanjiText)
+    .then((_response) => {
+      const response = _response;
+      return response.json();
+    })
+    .then((resJson) => {
+      let rowText = resJson.converted;
+              //ひらがな化APIからうまく返ってこなかったら漢字のままの文章をrowTextに入れる
+          if (rowText == undefined) {
+            rowText = kanjiText;
+          }
+      text = rowText.split(" ").join("");
+      var url =
+        originUrl +
+        "time=" +
+        str +
+        "&session=" +
+        session.value +
+        "&UniqueID=" +
+        UniqueID.value +
+        "&text=" +
+        text +
+        "&textCount=" +
+        text.length;
       XHR.open("GET", url, true);
       XHR.send(null);
-  console.log("ok");
+      //console.log("ok");
+    });
+}
 
+var perform = function (output_type, sentence) {
+  var endpoint = "https://labs.goo.ne.jp/api/hiragana"; // ①
+  payload = {
+    app_id: "9f270db13f202167a4dcfd58fe19b53aa726c1611c1c2810e813a4541b9f072e", // ②
+    sentence: sentence, // ③
+    output_type: output_type, // ④
+  };
+
+  let data = JSON.stringify(payload);
+
+  var options = {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: data,
+  };
+
+  return fetch(endpoint, options);
+};
+
+function getHiragana(input) {
+  return perform("hiragana", input);
 }
